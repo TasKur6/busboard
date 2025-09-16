@@ -1,18 +1,19 @@
 import { useState } from "react";
-import { getArrivals, type ArrivalInfo } from "../backend/fetchArrivals";
+import { getArrivalsGivenPostCode, type ArrivalInfo } from "../backend/fetchArrivals";
 function App() {
-  const [arrivalsData, setArrivalsData] = useState<ArrivalInfo[]>();
+  const [arrivalsData, setArrivalsData] = useState<ArrivalInfo[][]>();
   const [text, setText] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
   async function handleSubmit() {
-    const response = await getArrivals(text);
+    const response = await getArrivalsGivenPostCode(text);
     console.log(response);
     if(response === null) {
       setArrivalsData([]);
     }
     else {
+      console.log("THERE IS ARRIVAL DATA");
       setArrivalsData(response);
     }
   }
@@ -30,11 +31,15 @@ function App() {
         />
         <button className="underline text-cyan-600" onClick={handleSubmit}>Submit</button>
         <div className="m-12">
-          <ul>
-            {arrivalsData && arrivalsData!.map((item, index) => (
-              <li key={index}>Route: {item.towards},     Destination: {item.destinationName},     Time Until Arrival: {item.timeToStationMinutes} </li>
+            {arrivalsData && arrivalsData!.map((row, rowIndex) => (
+              <div key={rowIndex}>Bus Stop {rowIndex}
+                <ul>
+                  {row.length>0 && row.map((item, colIndex) => (
+                    <li key={colIndex}>Stop: {item.stationName},    Route: {item.towards},     Destination: {item.destinationName},     Time Until Arrival: {item.timeToStationMinutes} </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
         </div>
         </>
   )

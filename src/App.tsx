@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { getArrivalsGivenPostCode, type ArrivalInfo } from "../backend/fetchArrivals";
+
 function App() {
   const [arrivalsData, setArrivalsData] = useState<ArrivalInfo[][]>();
   const [text, setText] = useState("");
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
+
   async function handleSubmit() {
     const response = await getArrivalsGivenPostCode(text);
     console.log(response);
@@ -13,11 +16,10 @@ function App() {
       setArrivalsData([]);
     }
     else {
-      console.log("THERE IS ARRIVAL DATA");
       setArrivalsData(response);
     }
   }
- 
+
   return (
         <>
         <h1 className="text-3xl font-bold underline text-center text-cyan-600 m-4"

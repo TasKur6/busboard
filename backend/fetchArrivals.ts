@@ -20,12 +20,12 @@ export async function getArrivalsGivenPostCode(postCode: string): Promise<Arriva
     if(stopPoints === null) return null;
     stopPoints.sort((a, b) => a.distance - b.distance);
     const nearestTwoStops = stopPoints.slice(0,2);
-    var arrivals: ArrivalInfo[][] = [];
-    nearestTwoStops.forEach(async (item) => {
-        var tempArrivals = await getArrivalsGivenStopPoint(item.naptanId);
-        if(tempArrivals === null) return null;
-        arrivals.push(tempArrivals);
-    });
+    const arrivals = await Promise.all(
+        nearestTwoStops.map(async (item) => {
+        const tempArrivals = await getArrivalsGivenStopPoint(item.naptanId);
+        return tempArrivals ?? []; // return empty array if null
+        })
+    );
     return arrivals;
 }
 

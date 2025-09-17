@@ -49,7 +49,7 @@ function App() {
               <div key={rowIndex} className="m-12 border-2 border-black rounded-xl"><p className="text-xl text-cyan-700 underline">{row[0].stationName}</p>
                 <ol className="list-decimal list-inside mx-auto text-left pl-4 w-fit">
                   {row.length>0 && row.map((item, colIndex) => (
-                    <li key={colIndex}>{item.destinationName} via {item.towards}, {item.timeToStationMinutes} </li>
+                    <li key={colIndex}>{item.lineName} to {item.destinationName} via {item.towards}, {item.timeToStationMinutes} </li>
                   ))}
                 </ol>
               </div>

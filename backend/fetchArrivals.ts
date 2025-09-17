@@ -1,6 +1,7 @@
 import axios from 'axios';
 export type ArrivalInfo = {
     stationName: string;
+    lineName: string;
     destinationName: string;
     timeToStationMinutes: string;
     towards: string;
@@ -55,11 +56,11 @@ async function getArrivalsGivenStopPoint(stopPoint: string): Promise<ArrivalInfo
 
     //Return as ArrivalInfo type
     return firstFiveRows.map((item: any): ArrivalInfo => {
-        var {stationName, destinationName, timeToStation, towards} = item;
+        var {stationName, lineName, destinationName, timeToStation, towards} = item;
 
         //timeToStation gives a value whose unit is seconds, so convert this to a readable string of the form 'Xm Ys'
         var timeToStationMinutes = `${Math.floor(timeToStation/60)}m ${timeToStation%60}s`;
-        return {stationName, destinationName, timeToStationMinutes, towards};
+        return {stationName, lineName, destinationName, timeToStationMinutes, towards};
     });
   } catch (error) {
     console.log(error);

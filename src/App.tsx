@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { getArrivalsGivenPostCode, type ArrivalInfo } from "../backend/fetchArrivals";
+import { getArrivalsGivenPostCode } from "../backend/fetchArrivals";
+import type { ArrivalInfo } from "../backend/typeDefinitions";
 
 function App() {
   const [arrivalsData, setArrivalsData] = useState<ArrivalInfo[][] | string>();

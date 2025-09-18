@@ -10,3 +10,8 @@ export type StopPoint = {
     naptanId: string;
     distance: number;
 }
+
+export type location = {
+    latitude: number;
+    longitude: number;
+}

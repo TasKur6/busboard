@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { ArrivalInfo, StopPoint } from './typeDefinitions';
+import type { ArrivalInfo, location, StopPoint } from './typeDefinitions';
 
 export async function getArrivalsGivenPostCode(postCode: string): Promise<ArrivalInfo[][] | string | null> {
     const latLong = await getLatLongGivenPostCode(postCode);
@@ -51,10 +51,10 @@ async function getArrivalsGivenStopPoint(stopPoint: string): Promise<ArrivalInfo
   }
 }
 
-async function getStopPointsGivenLatLong(latLong: number[]): Promise<StopPoint[] | null> {
+async function getStopPointsGivenLatLong(latLong: location): Promise<StopPoint[] | null> {
     try {
         const stopType = "NaptanPublicBusCoachTram";
-        const latLongResponse = await axios.get(`https://api.tfl.gov.uk/StopPoint/?lat=${latLong[0]}&lon=${latLong[1]}&stopTypes=${stopType}&app_key=${api_key}`);
+        const latLongResponse = await axios.get(`https://api.tfl.gov.uk/StopPoint/?lat=${latLong.latitude}&lon=${latLong.longitude}&stopTypes=${stopType}&app_key=${api_key}`);
 
         const {stopPoints} = latLongResponse.data;
 
@@ -69,16 +69,15 @@ async function getStopPointsGivenLatLong(latLong: number[]): Promise<StopPoint[]
     }
 }
 
-async function getLatLongGivenPostCode(postCode: string): Promise<number[] | null> {
+async function getLatLongGivenPostCode(postCode: string): Promise<location | null> {
     try {
         const postCodeResponse = await axios.get(`https://api.postcodes.io/postcodes/${postCode}`);
 
-        const {latitude, longitude} = postCodeResponse.data.result;
-
-        const latLong: number[] = [];
-        latLong[0] = latitude;
-        latLong[1] = longitude;
-        console.log(latLong);
+        const latLong: location = (
+            {
+                latitude: postCodeResponse.data.result.latitude,
+                longitude: postCodeResponse.data.result.longitude
+            });
         return latLong;
     } catch(error) {
         console.log(error);

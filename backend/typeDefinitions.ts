@@ -8,10 +8,16 @@ export type ArrivalInfo = {
 
 export type StopPoint = {
     naptanId: string;
+    commonName: string;
     distance: number;
 }
 
 export type location = {
     latitude: number;
     longitude: number;
+}
+
+export type StopArrivals = {
+  stopName: string;
+  arrivals: ArrivalInfo[];
 }

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { getArrivalsGivenPostCode } from "../backend/fetchArrivals";
-import type { ArrivalInfo } from "../backend/typeDefinitions";
+import type { StopArrivals } from "../backend/typeDefinitions";
 
 function App() {
-  const [arrivalsData, setArrivalsData] = useState<ArrivalInfo[][] | string>();
+  const [arrivalsData, setArrivalsData] = useState<StopArrivals[] | string>();
   const [text, setText] = useState("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,10 +47,10 @@ function App() {
             <p className="text-red-500">{arrivalsData}</p>
           )}
           {Array.isArray(arrivalsData) && arrivalsData.length > 0 && arrivalsData.map((row, rowIndex) => (
-              <div key={rowIndex} className="m-12 border-2 border-black rounded-xl"><p className="text-xl text-cyan-700 underline">{row[0].stationName}</p>
+              <div key={rowIndex} className="m-12 border-2 border-black rounded-xl"><p className="text-xl text-cyan-700">{row.stopName}</p>
                 <ol className="list-decimal list-inside mx-auto text-left pl-4 w-fit">
-                  {row.length>0 && row.map((item, colIndex) => (
-                    <li key={colIndex}>{item.lineName} to {item.destinationName} via {item.towards}, {item.timeToStationMinutes} </li>
+                  {row.arrivals.length>0 && row.arrivals.map((item, colIndex) => (
+                    <li key={colIndex}>{item.lineName} to {item.destinationName} via {item.towards}, {item.timeToStationMinutes}m </li>
                   ))}
                 </ol>
               </div>

@@ -1,7 +1,7 @@
 import axios from 'axios';
-import type { ArrivalInfo, location, StopPoint } from './typeDefinitions';
+import type { ArrivalInfo, location, StopArrivals, StopPoint } from './typeDefinitions';
 
-export async function getArrivalsGivenPostCode(postCode: string): Promise<ArrivalInfo[][] | string | null> {
+export async function getArrivalsGivenPostCode(postCode: string): Promise<StopArrivals[] | string | null> {
     const latLong = await getLatLongGivenPostCode(postCode);
     if(latLong === null) return "Invalid Postcode";
     const stopPoints = await getStopPointsGivenLatLong(latLong);
@@ -11,20 +11,16 @@ export async function getArrivalsGivenPostCode(postCode: string): Promise<Arriva
 
     const nearestTwoStops = stopPoints.slice(0,2);
 
-    const arrivalsPotential = await Promise.all(
-        nearestTwoStops.map(async (item) => {
-        const tempArrivals = await getArrivalsGivenStopPoint(item.naptanId);
-        return tempArrivals ?? [];
-        })
-    );
+    const arrivals: StopArrivals[] = (
+        await Promise.all(
+            nearestTwoStops.map(async (item) => {
+            const tempArrivals = await getArrivalsGivenStopPoint(item.naptanId);
+            if (tempArrivals === null) return null;
+            return {stopName: item.commonName, arrivals: tempArrivals};
+            })
+        )
+    ).filter((item): item is StopArrivals => item !== null);
 
-    const arrivals: ArrivalInfo[][] = [];
-    for(const point of arrivalsPotential) {
-        if (point.length === 0) {
-            continue;
-        }
-        arrivals.push(point);
-    }
     if (arrivals.length === 0) return "Invalid bus stops or no buses found for bus stops";
     return arrivals;
 }
@@ -61,6 +57,7 @@ async function getStopPointsGivenLatLong(latLong: location): Promise<StopPoint[]
         return stopPoints.map((item: any): StopPoint => (
             {
                 naptanId: item.naptanId,
+                commonName: item.commonName,
                 distance: item.distance
             }));
     } catch(error) {

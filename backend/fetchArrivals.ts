@@ -1,17 +1,5 @@
 import axios from 'axios';
-
-export type ArrivalInfo = {
-    stationName: string;
-    lineName: string;
-    destinationName: string;
-    timeToStationMinutes: string;
-    towards: string;
-}
-
-type StopPoint = {
-    naptanId: string;
-    distance: number;
-}
+import type { ArrivalInfo, StopPoint } from './typeDefinitions';
 
 export async function getArrivalsGivenPostCode(postCode: string): Promise<ArrivalInfo[][] | string | null> {
     const latLong = await getLatLongGivenPostCode(postCode);

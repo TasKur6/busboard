@@ -1,0 +1,12 @@
+export type ArrivalInfo = {
+    stationName: string;
+    lineName: string;
+    destinationName: string;
+    timeToStationMinutes: string;
+    towards: string;
+}
+
+export type StopPoint = {
+    naptanId: string;
+    distance: number;
+}

@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 export type ArrivalInfo = {
     stationName: string;
     lineName: string;
@@ -33,7 +34,7 @@ export async function getArrivalsGivenPostCode(postCode: string): Promise<Arriva
     );
 
     //Checking for empty arrays in case of null return from API call
-    var arrivals: ArrivalInfo[][] = [];
+    const arrivals: ArrivalInfo[][] = [];
     for(const point of arrivalsPotential) {
         if (point.length === 0) {
             continue;
@@ -56,10 +57,10 @@ async function getArrivalsGivenStopPoint(stopPoint: string): Promise<ArrivalInfo
 
     //Return as ArrivalInfo type
     return firstFiveRows.map((item: any): ArrivalInfo => {
-        var {stationName, lineName, destinationName, timeToStation, towards} = item;
+        const {stationName, lineName, destinationName, timeToStation, towards} = item;
 
         //timeToStation gives a value whose unit is seconds, so convert this to a readable string of the form 'Xm Ys'
-        var timeToStationMinutes = `${Math.floor(timeToStation/60)}m ${timeToStation%60}s`;
+        const timeToStationMinutes = `${Math.floor(timeToStation/60)}m ${timeToStation%60}s`;
         return {stationName, lineName, destinationName, timeToStationMinutes, towards};
     });
   } catch (error) {
@@ -77,7 +78,7 @@ async function getStopPointsGivenLatLong(latLong: number[]): Promise<stopPoint[]
         const {stopPoints} = latLongResponse.data;
 
         //Return as stopPoint type
-        return stopPoints.map((item:any): stopPoint => {
+        return stopPoints.map((item: any): stopPoint => {
             const {naptanId, distance} = item;
             return {naptanId, distance};
         });
@@ -92,10 +93,10 @@ async function getLatLongGivenPostCode(postCode: string): Promise<number[] | nul
         const postCodeResponse = await axios.get(`https://api.postcodes.io/postcodes/${postCode}`);
 
         //Get latitude and longitude from total JSON data
-        var {latitude, longitude} = postCodeResponse.data.result;
+        const {latitude, longitude} = postCodeResponse.data.result;
 
         //Return as a number array
-        var latLong: number[] = [];
+        const latLong: number[] = [];
         latLong[0] = latitude;
         latLong[1] = longitude;
         console.log(latLong);

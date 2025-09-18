@@ -2,7 +2,7 @@ export type ArrivalInfo = {
     stationName: string;
     lineName: string;
     destinationName: string;
-    timeToStationMinutes: string;
+    timeToStationMinutes: number;
     towards: string;
 }
 

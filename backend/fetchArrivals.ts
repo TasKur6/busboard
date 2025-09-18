@@ -37,11 +37,14 @@ async function getArrivalsGivenStopPoint(stopPoint: string): Promise<ArrivalInfo
 
     const firstFiveBuses = response.data.slice(0,5);
 
-    return firstFiveBuses.map((item: any): ArrivalInfo => {
-        const {stationName, lineName, destinationName, timeToStation, towards} = item;
-        const timeToStationMinutes = `${Math.floor(timeToStation/60)}m ${timeToStation%60}s`;
-        return {stationName, lineName, destinationName, timeToStationMinutes, towards};
-    });
+    return firstFiveBuses.map((item: any): ArrivalInfo => (
+        {
+            stationName: item.stationName,
+            lineName: item.lineName,
+            destinationName: item.destinationName,
+            timeToStationMinutes: Math.round(item.timeToStation/60),
+            towards: item.towards
+        }));
   } catch (error) {
     console.log(error);
     return null;
@@ -55,10 +58,11 @@ async function getStopPointsGivenLatLong(latLong: number[]): Promise<StopPoint[]
 
         const {stopPoints} = latLongResponse.data;
 
-        return stopPoints.map((item: any): StopPoint => {
-            const {naptanId, distance} = item;
-            return {naptanId, distance};
-        });
+        return stopPoints.map((item: any): StopPoint => (
+            {
+                naptanId: item.naptanId,
+                distance: item.distance
+            }));
     } catch(error) {
         console.log(error);
         return null;

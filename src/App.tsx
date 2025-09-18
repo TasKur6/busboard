@@ -4,18 +4,18 @@ import type { StopArrivals } from "../backend/typeDefinitions";
 
 function App() {
   const [arrivalsData, setArrivalsData] = useState<StopArrivals[] | string>();
-  const [text, setText] = useState("");
+  const [postcodeInput, setPostcodeInput] = useState<string>("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setText(event.target.value);
+    setPostcodeInput(event.target.value);
   };
 
   async function handleSubmit() {
-    if(text === "") {
+    if(postcodeInput === "") {
       setArrivalsData("No postcode entered! Please enter a postcode first.");
       return;
     }
-    const response = await getArrivalsGivenPostCode(text);
+    const response = await getArrivalsGivenPostCode(postcodeInput);
     console.log(response);
     if(response === null) {
       setArrivalsData("Arrivals not found");
@@ -33,7 +33,7 @@ function App() {
           <input
             className="p-2 m-12 text-center border-black"
             type="text"
-            value={text}
+            value={postcodeInput}
             placeholder="Type here..."
             onChange={handleChange}
           />

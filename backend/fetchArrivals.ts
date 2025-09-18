@@ -8,7 +8,7 @@ export type ArrivalInfo = {
     towards: string;
 }
 
-type stopPoint = {
+type StopPoint = {
     naptanId: string;
     distance: number;
 }
@@ -69,7 +69,7 @@ async function getArrivalsGivenStopPoint(stopPoint: string): Promise<ArrivalInfo
   }
 }
 
-async function getStopPointsGivenLatLong(latLong: number[]): Promise<stopPoint[] | null> {
+async function getStopPointsGivenLatLong(latLong: number[]): Promise<StopPoint[] | null> {
     try {
         const stopType = "NaptanPublicBusCoachTram";
         const latLongResponse = await axios.get(`https://api.tfl.gov.uk/StopPoint/?lat=${latLong[0]}&lon=${latLong[1]}&stopTypes=${stopType}&app_key=${api_key}`);
@@ -78,7 +78,7 @@ async function getStopPointsGivenLatLong(latLong: number[]): Promise<stopPoint[]
         const {stopPoints} = latLongResponse.data;
 
         //Return as stopPoint type
-        return stopPoints.map((item: any): stopPoint => {
+        return stopPoints.map((item: any): StopPoint => {
             const {naptanId, distance} = item;
             return {naptanId, distance};
         });

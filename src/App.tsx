@@ -15,19 +15,23 @@ function App() {
     try {
       if(postcodeInput === "") {
         setErrorMessage("No postcode entered! Please enter a postcode first.");
+        setArrivalsData([]);
         return;
       }
       const response = await getPostCodeArrivals(postcodeInput);
       console.log(response);
       if(response === null) {
         setErrorMessage("Arrivals not found");
+        setArrivalsData([]);
       }
       else {
         setArrivalsData(response);
+        setErrorMessage("");
       }
     } catch(error) {
       const errMsg = (error instanceof Error) ? error.message : String(error);
       setErrorMessage(errMsg);
+      setArrivalsData([]);
     }
   }
 
@@ -52,10 +56,10 @@ function App() {
           {!errorPresent && !arrivalsPresent && (
             <p>Please enter a postcode and click Search.</p>
           ) }
-          {errorPresent && !arrivalsPresent && (
+          {errorPresent ? (
             <p className="text-red-500">{errorMessage}</p>
-          )}
-          {arrivalsPresent && arrivalsData.map((row, rowIndex) => (
+          ) :
+          arrivalsPresent && arrivalsData.map((row, rowIndex) => (
               <div key={rowIndex} className="m-12 border-2 border-black rounded-xl"><p className="text-xl text-cyan-700">{row.stopName}</p>
                 <ol className="list-decimal list-inside mx-auto text-left pl-4 w-fit">
                   {row.arrivals.length>0 && row.arrivals.map((item, colIndex) => (

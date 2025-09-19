@@ -26,7 +26,7 @@ export async function getStopPointArrivals(stopPoint: string): Promise<ArrivalIn
 export async function getStopPointsFromLatLong(latLong: location): Promise<StopPoint[] | null> {
     try {
         const stopType = "NaptanPublicBusCoachTram";
-        const latLongResponse = await axios.get(`https://api.tfl.gov.uk/StopPoint/?lat=${latLong.latitude}&lon=${latLong.longitude}&stopTypes=${stopType}&app_key=${api_key}`);
+        const latLongResponse = await axios.get(`https://api.tfl.gov.uk/StopPoint/?lat=${latLong.latitude}&lon=${latLong.longitude}&stopTypes=${stopType}&radius=2000&app_key=${api_key}`);
 
         const {stopPoints} = latLongResponse.data;
 

@@ -47,7 +47,7 @@ function App() {
             className="p-2 m-12 text-center border-black"
             type="text"
             value={postcodeInput}
-            placeholder="Type here..."
+            placeholder="Type postcode here..."
             onChange={handleChange}
           />
           <button className="underline text-white px-4 py-2 bg-cyan-600 rounded" onClick={handleSubmit}>Search</button>
@@ -63,7 +63,7 @@ function App() {
               <div key={rowIndex} className="m-12 border-2 border-black rounded-xl"><p className="text-xl text-cyan-700">{row.stopName}</p>
                 <ol className="list-decimal list-inside mx-auto text-left pl-4 w-fit">
                   {row.arrivals.length>0 && row.arrivals.map((item, colIndex) => (
-                    <li key={colIndex}>{item.lineName} to {item.destinationName} via {item.towards}, {item.timeToStationMinutes}m </li>
+                    <li key={colIndex}>{item.lineName} to {item.destinationName} via {item.towards}, {item.timeToStation}m </li>
                   ))}
                 </ol>
               </div>

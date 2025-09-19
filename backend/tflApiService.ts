@@ -3,18 +3,18 @@ import type { ArrivalInfo, location, StopPoint } from './typeDefinitions';
 
 export async function getStopPointArrivals(stopPoint: string): Promise<ArrivalInfo[] | null> {
   try {
-    const response = await axios.get(`https://api.tfl.gov.uk/StopPoint/${stopPoint}/Arrivals?app_key=${api_key}`);
+    const response = await axios.get<ArrivalInfo[]>(`https://api.tfl.gov.uk/StopPoint/${stopPoint}/Arrivals?app_key=${api_key}`);
 
-    response.data.sort((a: { timeToStation: number; }, b: { timeToStation: number; }) => a.timeToStation - b.timeToStation);
+    response.data.sort((a,b) => a.timeToStation - b.timeToStation);
 
     const firstFiveBuses = response.data.slice(0,5);
 
-    return firstFiveBuses.map((item: any): ArrivalInfo => (
+    return firstFiveBuses.map((item: ArrivalInfo): ArrivalInfo => (
         {
             stationName: item.stationName,
             lineName: item.lineName,
             destinationName: item.destinationName,
-            timeToStationMinutes: Math.round(item.timeToStation/60),
+            timeToStation: Math.round(item.timeToStation/60),
             towards: item.towards
         }));
   } catch (error) {

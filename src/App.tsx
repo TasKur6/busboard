@@ -6,9 +6,13 @@ function App() {
   const [arrivalsData, setArrivalsData] = useState<StopArrivals[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [postcodeInput, setPostcodeInput] = useState<string>("");
+  const [radiusInput, setRadiusInput] = useState<string>("");
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePostcodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPostcodeInput(event.target.value);
+  };
+  const handleRadiusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRadiusInput(event.target.value);
   };
 
   async function handleSubmit() {
@@ -18,7 +22,7 @@ function App() {
         setArrivalsData([]);
         return;
       }
-      const response = await getPostCodeArrivals(postcodeInput);
+      const response = await getPostCodeArrivals(postcodeInput, radiusInput);
       console.log(response);
       if(response === null) {
         setErrorMessage("Arrivals not found");
@@ -47,8 +51,15 @@ function App() {
             className="p-2 m-12 text-center border-black"
             type="text"
             value={postcodeInput}
-            placeholder="Type postcode here..."
-            onChange={handleChange}
+            placeholder="Postcode"
+            onChange={handlePostcodeChange}
+          />
+          <input
+            className="p-2 m-12 text-center border-black"
+            type="text"
+            value={radiusInput}
+            placeholder="Radius (Optional)"
+            onChange={handleRadiusChange}
           />
           <button className="underline text-white px-4 py-2 bg-cyan-600 rounded" onClick={handleSubmit}>Search</button>
         </div>
@@ -63,7 +74,7 @@ function App() {
               <div key={rowIndex} className="m-12 border-2 border-black rounded-xl"><p className="text-xl text-cyan-700">{row.stopName}</p>
                 <ol className="list-decimal list-inside mx-auto text-left pl-4 w-fit">
                   {row.arrivals.length>0 && row.arrivals.map((item, colIndex) => (
-                    <li key={colIndex}>{item.lineName} to {item.destinationName} via {item.towards}, {item.timeToStation}m </li>
+                    <li key={colIndex}>{item.lineName} to {item.destinationName} via {item.towards}, {item.timeToStation === 0 ? "Due" : `${item.timeToStation}m`} </li>
                   ))}
                 </ol>
               </div>

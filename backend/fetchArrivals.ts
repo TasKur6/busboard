@@ -2,11 +2,12 @@ import type { StopArrivals } from './typeDefinitions';
 import { getLatLongGivenPostCode } from './postcodeApiService';
 import { getStopPointArrivals, getStopPointsFromLatLong} from './tflApiService';
 
-export async function getPostCodeArrivals(postCode: string): Promise<StopArrivals[]> {
+export async function getPostCodeArrivals(postCode: string, radius: string): Promise<StopArrivals[]> {
     const latLong = await getLatLongGivenPostCode(postCode);
     if(latLong === null) throw new Error("Invalid Postcode");
-    const stopPoints = await getStopPointsFromLatLong(latLong);
-    if(stopPoints === null) throw new Error("Bus Stops not found");
+    const stopPoints = await getStopPointsFromLatLong(latLong, parseInt(radius));
+    console.log(stopPoints);
+    if(stopPoints === null || stopPoints.length === 0) throw new Error("Bus Stops not found");
 
     stopPoints.sort((a, b) => a.distance - b.distance);
 
@@ -22,7 +23,7 @@ export async function getPostCodeArrivals(postCode: string): Promise<StopArrival
         )
     ).filter((item): item is StopArrivals => item !== null);
 
-    if (arrivals.length === 0) throw new Error("Invalid bus stops or no buses found for bus stops");
+    if (arrivals.length === 0) throw new Error("No buses found for bus stops");
     return arrivals;
 }
 

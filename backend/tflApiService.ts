@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { ArrivalInfo, location, StopPoint } from './typeDefinitions';
 
-export async function getArrivalsGivenStopPoint(stopPoint: string): Promise<ArrivalInfo[] | null> {
+export async function getStopPointArrivals(stopPoint: string): Promise<ArrivalInfo[] | null> {
   try {
     const response = await axios.get(`https://api.tfl.gov.uk/StopPoint/${stopPoint}/Arrivals?app_key=${api_key}`);
 
@@ -23,7 +23,7 @@ export async function getArrivalsGivenStopPoint(stopPoint: string): Promise<Arri
   }
 }
 
-export async function getStopPointsGivenLatLong(latLong: location): Promise<StopPoint[] | null> {
+export async function getStopPointsFromLatLong(latLong: location): Promise<StopPoint[] | null> {
     try {
         const stopType = "NaptanPublicBusCoachTram";
         const latLongResponse = await axios.get(`https://api.tfl.gov.uk/StopPoint/?lat=${latLong.latitude}&lon=${latLong.longitude}&stopTypes=${stopType}&app_key=${api_key}`);

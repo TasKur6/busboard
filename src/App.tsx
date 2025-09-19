@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { getArrivalsGivenPostCode } from "../backend/fetchArrivals";
+import { getPostCodeArrivals } from "../backend/fetchArrivals";
 import type { StopArrivals } from "../backend/typeDefinitions";
 
 function App() {
-  const [arrivalsData, setArrivalsData] = useState<StopArrivals[] | string>();
+  const [arrivalsData, setArrivalsData] = useState<StopArrivals[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [postcodeInput, setPostcodeInput] = useState<string>("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -11,19 +12,27 @@ function App() {
   };
 
   async function handleSubmit() {
-    if(postcodeInput === "") {
-      setArrivalsData("No postcode entered! Please enter a postcode first.");
-      return;
-    }
-    const response = await getArrivalsGivenPostCode(postcodeInput);
-    console.log(response);
-    if(response === null) {
-      setArrivalsData("Arrivals not found");
-    }
-    else {
-      setArrivalsData(response);
+    try {
+      if(postcodeInput === "") {
+        setErrorMessage("No postcode entered! Please enter a postcode first.");
+        return;
+      }
+      const response = await getPostCodeArrivals(postcodeInput);
+      console.log(response);
+      if(response === null) {
+        setErrorMessage("Arrivals not found");
+      }
+      else {
+        setArrivalsData(response);
+      }
+    } catch(error) {
+      const errMsg = (error instanceof Error) ? error.message : String(error);
+      setErrorMessage(errMsg);
     }
   }
+
+  const errorPresent = errorMessage !== "";
+  const arrivalsPresent = arrivalsData.length > 0;
 
   return (
         <>
@@ -40,13 +49,13 @@ function App() {
           <button className="underline text-white px-4 py-2 bg-cyan-600 rounded" onClick={handleSubmit}>Search</button>
         </div>
         <div className="m-12 text-center">
-          {arrivalsData === undefined && (
+          {!errorPresent && !arrivalsPresent && (
             <p>Please enter a postcode and click Search.</p>
           ) }
-          {typeof arrivalsData === 'string' && (
-            <p className="text-red-500">{arrivalsData}</p>
+          {errorPresent && !arrivalsPresent && (
+            <p className="text-red-500">{errorMessage}</p>
           )}
-          {Array.isArray(arrivalsData) && arrivalsData.length > 0 && arrivalsData.map((row, rowIndex) => (
+          {arrivalsPresent && arrivalsData.map((row, rowIndex) => (
               <div key={rowIndex} className="m-12 border-2 border-black rounded-xl"><p className="text-xl text-cyan-700">{row.stopName}</p>
                 <ol className="list-decimal list-inside mx-auto text-left pl-4 w-fit">
                   {row.arrivals.length>0 && row.arrivals.map((item, colIndex) => (

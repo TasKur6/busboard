@@ -18,7 +18,7 @@ export async function getPostCodeArrivals(postCode: string, radius: string): Pro
             nearestTwoStops.map(async (item) => {
             const tempArrivals = await getStopPointArrivals(item.naptanId);
             if (tempArrivals === null) return null;
-            return {stopName: item.commonName, arrivals: tempArrivals};
+            return {stopName: item.commonName, stopDistance: Math.round(item.distance), arrivals: tempArrivals};
             })
         )
     ).filter((item): item is StopArrivals => item !== null);

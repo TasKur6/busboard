@@ -39,6 +39,12 @@ function App() {
     }
   }
 
+  const getEmoji = (timeInMins: number) => {
+    if (timeInMins <= 2) return 'Hurry! 🏃‍♂️';
+    if (timeInMins <= 5) return 'Almost! 🚌';
+    return 'Relax 😌';
+  };
+
   const errorPresent = errorMessage !== "";
   const arrivalsPresent = arrivalsData.length > 0;
 
@@ -71,10 +77,11 @@ function App() {
             <p className="text-red-500">{errorMessage}</p>
           ) :
           arrivalsPresent && arrivalsData.map((row, rowIndex) => (
-              <div key={rowIndex} className="m-12 border-2 border-black rounded-xl"><p className="text-xl text-cyan-700">{row.stopName}</p>
+              <div key={rowIndex} className="m-12 border-2 border-black rounded-xl"><p className="text-xl font-bold text-cyan-700">{row.stopName}</p>
+              <p className="text-cyan-700">({row.stopDistance}m away - {Math.ceil(row.stopDistance/84)} min walk)</p>
                 <ol className="list-decimal list-inside mx-auto text-left pl-4 w-fit">
                   {row.arrivals.length>0 && row.arrivals.map((item, colIndex) => (
-                    <li key={colIndex}>{item.lineName} to {item.destinationName} via {item.towards}, {item.timeToStation === 0 ? "Due" : `${item.timeToStation}m`} </li>
+                    <li key={colIndex}>{item.lineName} to {item.destinationName} via {item.towards}, {item.timeToStation === 0 ? "Due" : `${item.timeToStation}m` } <span className="text-cyan-600 font-bold">{getEmoji(item.timeToStation)}</span></li>
                   ))}
                 </ol>
               </div>

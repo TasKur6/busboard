@@ -19,5 +19,6 @@ export type location = {
 
 export type StopArrivals = {
   stopName: string;
+  stopDistance: number;
   arrivals: ArrivalInfo[];
 }
